@@ -1,2 +1,5 @@
-#Ignore the API folder
+
 API/
+test/
+myvenv/
+planet.py
