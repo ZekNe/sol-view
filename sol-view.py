@@ -1,73 +1,33 @@
-import json
-from vpython import *
-import math
-
-with open("planets.json", "r") as file:
-    data = json.load(file)
-
-sun = sphere(pos=vector(0, 0, 0), radius=1, color=color.yellow)
-
-planets_spheres = []
-labels = []
-
-for planet in data["planets"]:
-    distance = planet["orbital_elements"]["semi_major_axis"] * 10
-
-    planet_sphere = sphere(
-        pos = vector(distance, 0, 0),
-        radius = planet["physical_properties"]["radius"] * 0.0001,
-        color = color.white,
-        name=planet["name"]
-    )
-
-    label_text = f"{planet['name']} - {planet['physical_properties']['radius']} km"
-
-    planet_label = label(
-        pos = planet_sphere.pos + vector(0, 0.1, 0),
-        text = label_text,
-        height = 12 , 
-        color = color.white
-    )
-
-    planets_spheres.append(planet_sphere)
-    labels.append(planet_label)
+import plotly.graph_objects as go
+import numpy as np
 
 
-orbits = []
-for planet in data["planets"]:
-    distance = planet["orbital_elements"]["semi_major_axis"] * 10
-    inclination = math.radians(planet["orbital_elements"]["inclination"])
-    
-    orbit = curve(color=color.gray(0.5))
+def create_sphere(radius=1, center=(0, 0, 0), resolution=20): #Sphere
+    u = np.linspace(0, 2 * np.pi, resolution)  
+    v = np.linspace(0, np.pi, resolution)
+    x = center[0] + radius * np.outer(np.cos(u), np.sin(v))
+    y = center[1] + radius * np.outer(np.sin(u), np.sin(v))
+    z = center[2] + radius * np.outer(np.ones(np.size(u)), np.cos(v))
+    return x, y, z
 
-    for angle in range(0, 361, 2):
-        radian_angle = math.radians(angle)
-        x = distance * math.cos(radian_angle)
-        y = distance * math.sin(radian_angle)
-        z = 0 
+x, y, z = create_sphere(radius=5, center=(0, 0, 0)) #Sun coordinates
 
-        point = vector(x, y, z).rotate(axis=vector(1, 0, 0), angle=inclination)
-        orbit.append(point)
+sun = go.Surface(x=x, y=y, z=z, colorscale='YlorRd', showscale=False) #Creates Sun
 
-    orbits.append(orbit)
+fig = go.Figure(data=[sun],) # Creates figure
 
-t = 0
-while True:
-    rate(30)
+# Layout
+fig.update_layout(
+    title='Solar System',
+    scene=dict(
+        xaxis=dict(visible=False), # Hide axes
+        yaxis=dict(visible=False),
+        zaxis=dict(visible=False),
+        aspectmode='cube', # Equal proportions
+    ),
+    plot_bgcolor='rgb(30, 30, 30)',
+    paper_bgcolor='rgb(0, 0, 0)', 
+    margin=dict(l=0, r=0, b=0, t=40) # Remove margins
+)
 
-    for i, planet in enumerate(data['planets']):
-        distance =  planet["orbital_elements"]["semi_major_axis"] * 10
-
-        orbital_angle = math.radians(360*t / 365)
-
-        planets_spheres[i].pos = vector(
-            distance * math.cos(orbital_angle),
-            distance * math.sin(orbital_angle), 
-            0
-        )
-        
-        labels[i].pos = planets_spheres[i].pos + vector(0, 0.1, 0)
-        
-    t += 1
-
-
+fig.show()
