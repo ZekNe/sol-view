@@ -1,1 +1,1 @@
-sol-view
+Interactive 3D solar system in Python with Plotly.
