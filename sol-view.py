@@ -7,24 +7,24 @@ spheres = [
     {"name": "Mercury", "radius": 0.383 * 3, "color": "Purp", "semimajor_axis": 57.90900, "eccentricity": 0.20560, "inclination": 7.0, "orbit": 87, "mean_longitude": 252.25084, "periapsis": 29.022, "mean_motion": 4.092},
     {"name": "Venus", "radius": 0.950 * 3, "color": "Oranges", "semimajor_axis": 108.20000, "eccentricity": 0.00699, "inclination": 3.4, "orbit": 224, "mean_longitude": 181.97973, "periapsis": 54.780, "mean_motion": 1.602},
     {"name": "Earth", "radius": 1 * 3, "color": "Earth", "semimajor_axis": 149.60000, "eccentricity": 0.01671, "inclination": 0.0, "orbit": 365, "mean_longitude": 100.46646, "periapsis": 85.901, "mean_motion": 0.985607},
-    {"name": "Mars", "radius": 0.532 * 3, "color": "agsunset", "semimajor_axis": 227.93919, "eccentricity": 0.09340, "inclination": 1.85, "orbit": 687, "mean_longitude": 355.43300, "periapsis": 286.231, "mean_motion": 0.524},
-    {"name": "Jupiter", "radius": 11.21 * 3, "color": "pubugn", "semimajor_axis": 778.57000, "eccentricity": 0.04839, "inclination": 1.30, "orbit": 4333, "mean_longitude": 34.40438, "periapsis": 273.442, "mean_motion": 0.083},
-    {"name": "Saturn", "radius": 9.45 * 3, "color": "electric", "semimajor_axis": 1433.53000, "eccentricity": 0.05386, "inclination": 2.49, "orbit": 10759, "mean_longitude": 49.94432, "periapsis": 336.178, "mean_motion": 0.033},
+    {"name": "Mars", "radius": 0.532 * 3, "color": "Oryel", "semimajor_axis": 227.93919, "eccentricity": 0.09340, "inclination": 1.85, "orbit": 687, "mean_longitude": 355.43300, "periapsis": 286.231, "mean_motion": 0.524},
+    {"name": "Jupiter", "radius": 11.21 * 3, "color": "Peach", "semimajor_axis": 778.57000, "eccentricity": 0.04839, "inclination": 1.30, "orbit": 4333, "mean_longitude": 34.40438, "periapsis": 273.442, "mean_motion": 0.083},
+    {"name": "Saturn", "radius": 9.45 * 3, "color": "Armyrose", "semimajor_axis": 1433.53000, "eccentricity": 0.05386, "inclination": 2.49, "orbit": 10759, "mean_longitude": 49.94432, "periapsis": 336.178, "mean_motion": 0.033},
     {"name": "Uranus", "radius": 4.01 * 5, "color": "bluyl", "semimajor_axis": 2872.46000, "eccentricity": 0.04638, "inclination": 0.77, "orbit": 30687, "mean_longitude": 314.05501, "periapsis": 98.862, "mean_motion": 0.011},
     {"name": "Neptune", "radius": 3.88 * 5, "color": "blues", "semimajor_axis": 4495.06000, "eccentricity": 0.01000, "inclination": 1.77, "orbit": 60190, "mean_longitude": 304.88003, "periapsis": 256.932, "mean_motion": 0.006},
     # {"name": "Pluto", "radius": 0.186, "color": "purpor", "semimajor_axis": 5906.38000, "eccentricity": 0.24880, "inclination": 17.15, "orbit": 90560, "mean_longitude": 238.92903, "periapsis": 4436.82, "mean_motion": 0.003}
 ]
 
-def julian_date():
+
+def julian_date(date):
     """Calculate the Julian Date for the current day."""
-    date = datetime.date.today()
     jd = (367 * date.year - (7 * (date.year + (date.month + 9) // 12)) // 4 +
            (275 * date.month) // 9 + date.day + 1721013.5)
     return jd
 
-def anomaly(mean_longitude, periapsis, mean_motion, eccentricity, tol=1e-6):
+def anomaly(mean_longitude, periapsis, mean_motion, eccentricity, date, tol=1e-6):
     """Calculate the true anomaly for a celestial body."""
-    JD = julian_date()
+    JD = julian_date(date)
     M_deg = (mean_longitude - periapsis + mean_motion * (JD - 2451545.0)) % 360
     M = np.radians(M_deg)
     E = M # Initial guess for eccentric anomaly
@@ -40,8 +40,10 @@ def anomaly(mean_longitude, periapsis, mean_motion, eccentricity, tol=1e-6):
     return v
 
 # Set sphere position
-def get_position(sphere):
+def get_position(sphere, date):
     """Compute the 3D position of a sphere."""
+    if "semimajor_axis" not in sphere:
+        return 0, 0, 0
     a = sphere["semimajor_axis"]
     e = sphere["eccentricity"]
     i = sphere["inclination"]
@@ -49,7 +51,7 @@ def get_position(sphere):
     p = sphere["periapsis"]
     m = sphere["mean_motion"]
  
-    v = anomaly(l, p, m, e)
+    v = anomaly(l, p, m, e, date)
     r = a * (1 - e**2) / (1 + e * np.cos(v)) # Radial distance   
     x = r * np.cos(v)
     y = r * np.sin(v)
@@ -108,38 +110,84 @@ def create_orbit(sphere, resolution=100):
 
     return x, y, z
 
+# Create Figure
 fig = go.Figure() 
 
-# Draw spheres
+# Initial date
+date = datetime.date.today()
+day_of_year = date.timetuple().tm_yday
+
+# Initial traces
+traces = []
+
+# Draw initial spheres
 for sphere in spheres:
-    if "semimajor_axis" in sphere:  
-        x_pos, y_pos, z_pos = get_position(sphere)
-    else:
-        x_pos, y_pos, z_pos = 0, 0, 0
+    x_pos, y_pos, z_pos = get_position(sphere, date)
     x, y, z, color, name = create_sphere(sphere["radius"], sphere["color"], sphere["name"])
     x += x_pos
     y += y_pos
     z += z_pos
-    fig.add_trace(go.Surface(x=x, y=y, z=z, colorscale=color, showscale=False, name = name))
+    traces.append(go.Surface(x=x, y=y, z=z, colorscale=color, showscale=False, name = name))
 
-# Draw orbits
+# Draw initial orbits
 for sphere in spheres[1:]: 
     x, y, z = create_orbit(sphere)
-    fig.add_trace(go.Scatter3d(x=x, y=y, z=z, mode="lines", line=dict(color="white", width=1),
+    traces.append(go.Scatter3d(x=x, y=y, z=z, mode="lines", line=dict(color="white", width=1),
                                 name=f"{sphere['name']} Orbit", showlegend=False ))
+
+fig.add_traces(traces)
+
+# Pre-calculate positions for each day
+base_date = datetime.date(date.year, 1, 1)
+step_size = 1
+steps = []
+frames = []
+
+for day in range(0, 365, step_size):
+    current_date = base_date + datetime.timedelta(days=day)
+    frame_data = []
+
+    # Calculate positions for each sphere
+    for sphere in spheres:
+        x_pos, y_pos, z_pos = get_position(sphere, current_date)
+        x, y, z, color, name = create_sphere(sphere["radius"], sphere["color"], sphere["name"])
+        x += x_pos
+        y += y_pos
+        z += z_pos
+        frame_data.append(go.Surface(x=x, y=y, z=z, colorscale=color, showscale=False, name = name))
+
+    frames.append(go.Frame(data=frame_data, name=str(day),
+                       layout=dict(title=f"Solar System - {current_date}")))
+
+    steps.append({
+        "args": [[str(day)], {"frame": {"duration": 0, "redraw": True},
+                             "mode": "immediate",
+                             "transition": {"duration": 0}}],
+        "label": current_date.strftime("%b %d"),
+        "method": "animate"
+    })
+
+fig.frames = frames
 
 # Layout
 fig.update_layout(
-    title="Solar System",
+    title=f"Solar System - {date}",
     scene=dict(
         xaxis=dict(title="X Axis", visible=False),
         yaxis=dict(title="Y Axis", visible=False),
         zaxis=dict(title="Z Axis", visible=False),
         aspectmode='data',  
     ),
+    sliders=[{
+        "active": day_of_year - 1,
+        "currentvalue": {"prefix": "Date: "},
+        "pad": {"b": 5, "l": 15, "r": 15},
+        "steps": steps
+    }],
     plot_bgcolor="rgb(30, 30, 30)",
     paper_bgcolor="rgb(3, 3, 3)", 
-    margin=dict(l=0, r=0, b=0, t=40)
+    margin=dict(l=0, r=0, b=0, t=35)
 )
 
+# fig.write_html("solar_system.html", include_plotlyjs="cdn") # Export as html file
 fig.show()
