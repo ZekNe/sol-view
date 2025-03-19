@@ -1,0 +1,14 @@
+-----------------------------------------------------------------------------
+| Parameter       | Description                             | Units         |
+-----------------------------------------------------------------------------
+| name            | Name of the celestial body              | String        |
+| radius          | Scaled radius (Earth radius = 6371km)   | 1 = 6371 km   |
+| color           | Using pyplot colors                     | String        |
+| semimajor_axis  | Avg. distance from the Sun              | Million km    |
+| eccentricity    | Orbit stretch (0 = circle)              | 0–1 scale     |
+| inclination     | Tilt of orbit                           | Degrees       |
+| orbit           | Orbital period                          | Earth days    |
+| mean_longitude  | Position in orbit (J2000)               | Degrees       |
+| periapsis       | Closest approach to the Sun             | Million km    |
+| mean_motion     | Average movement per day                | Degrees/day   |
+-----------------------------------------------------------------------------
