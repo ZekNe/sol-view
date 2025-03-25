@@ -1,7 +1,7 @@
 
 # Sol-view
 
-Interactive 3D solar system visualization in Python using Plotly. Accurately displays the Sun, planets, some of their largest moons, and supports adding more celestial bodies for a given year.
+Interactive 3D solar system visualization in Python using Plotly. Accurately displays the Sun, planets, some of their largest moons, and supports adding more celestial bodies.
 
 ## Installation
 
@@ -10,21 +10,28 @@ Interactive 3D solar system visualization in Python using Plotly. Accurately dis
 git clone https://github.com/ZekNe/sol-view.git
 ```
 
-
+---
 2. **Set up virtual environment (Optional)**
+   
 ```bash
 python -m venv venv
 ```
 
-
  Activate it:
+* On Windows:
 ```bash
 venv/scripts/activate
 ```
+* On macOS/Linux:
+```bash
+source venv/bin/activate
+```
 
+---
 
 3. **Install Dependencies**
-Requires Python 3.6+ (python --version to check).
+   
+* Requires Python 3.6+ (python --version to check)
 
  Using requirements.txt:
 ```bash
@@ -36,6 +43,7 @@ pip install -r requirements.txt
 pip install numpy plotly
 ```
 
+---
 
 4. **Launch**
 ```bash
@@ -85,10 +93,9 @@ Add new celestial objects to celestial_body.json in this format:
 
 ```
 
-------------------------------------------------
-### Changing the Year
-Edit sol-view.py to change the simulation year (default is current year):
-e.g., (2033, 1, 1)
+
+### Set a Custom Year
+Change the year by modifying the base_date in sol-view.py:
 ```py
 base_date = datetime.date(date.year, 1, 1)
 
@@ -96,9 +103,9 @@ base_date = datetime.date(date.year, 1, 1)
 
 base_date = datetime.date(2033, 1, 1)
 ```
-------------------------------------------------
+
 ### Saving Output
-Uncomment to export as an HTML file:
+To save the visualization as an HTML file for later viewing, uncomment the following line in sol-view.py:
 ```py
 fig.write_html("solar_system.html", include_plotlyjs="cdn")
 ```
