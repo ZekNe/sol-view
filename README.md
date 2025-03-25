@@ -10,32 +10,38 @@ Interactive 3D solar system visualization in Python using Plotly. Accurately dis
 git clone https://github.com/ZekNe/sol-view.git
 ```
 
+
 2. **Set up virtual environment (Optional)**
 ```bash
 python -m venv venv
 ```
 
--Activate it:
+
+ Activate it:
 ```bash
 venv/scripts/activate
 ```
 
+
 3. **Install Dependencies**
 Requires Python 3.6+ (python --version to check).
 
-Using requirements.txt:
+ Using requirements.txt:
 ```bash
 pip install -r requirements.txt
 ```
 
-or manually:
+ or manually:
 ```bash
 pip install numpy plotly
 ```
+
+
 4. **Launch**
 ```bash
 python sol-view.py
 ```
+
 
 ## Usage
 
@@ -85,6 +91,10 @@ Edit sol-view.py to change the simulation year (default is current year):
 e.g., (2033, 1, 1)
 ```py
 base_date = datetime.date(date.year, 1, 1)
+
+#e.g.
+
+base_date = datetime.date(2033, 1, 1)
 ```
 ------------------------------------------------
 ### Saving Output
