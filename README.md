@@ -1,52 +1,45 @@
 
 # Sol-view
 
-Interactive 3D solar system in Python with Plotly.
-Accurate visualization of our solar system for a given year,
-showing the sun, planets and some of their largest moons,
-and the ability to add more if desired.
-
-
+Interactive 3D solar system visualization in Python using Plotly. Accurately displays the Sun, planets, some of their largest moons, and supports adding more celestial bodies for a given year.
 
 ## Installation
 
-Clone or download repository
-
+1. **Clone the Repository**  
 ```bash
 git clone https://github.com/ZekNe/sol-view.git
 ```
-------------------------------------------------
-*optional
-Set up virtual environment
 
+2. **Set up virtual environment (Optional)**
 ```bash
 python -m venv venv
 ```
 
-Launch the environment from main directory
+Activate it:
 ```bash
 venv/scripts/activate
 ```
-------------------------------------------------
-Install libraries
 
-```bash
-pip install numpy, plotly
-```
-or
+3. **Install Dependencies**
+Requires Python 3.6+ (python --version to check).
 
+Using requirements.txt:
 ```bash
 pip install -r requirements.txt
 ```
-------------------------------------------------
 
-Launch from main directory
-
+or manually:
 ```bash
-py sol-view.py
+pip install numpy plotly
+```
+4. **Launch**
+```bash
+python sol-view.py
 ```
 
 ## Usage
+
+### Celestial Body Parameters
 
 | Parameter       | Description                             | Units         |
 |-----------------|-----------------------------------------|---------------|
@@ -61,10 +54,13 @@ py sol-view.py
 | periapsis       | Closest approach to the Sun             | Million km    |
 | mean_motion     | Average movement per day                | Degrees/day   |
 
+### Adding New Bodies
 Make sure to use J2000 epoch for accurate position in the orbit.
 
-Add new celestial objects to celestial_body.json in this format
-```bash
+Add new celestial objects to celestial_body.json in this format:
+```json
+[
+    {
     ...
     },
     {
@@ -84,16 +80,16 @@ Add new celestial objects to celestial_body.json in this format
 ```
 
 ------------------------------------------------
-
-Change this to a custom year, e.g., (2033, 1, 1)
-
-```bash
+### Changing the Year
+Edit sol-view.py to change the simulation year (default is current year):
+e.g., (2033, 1, 1)
+```py
 base_date = datetime.date(date.year, 1, 1)
 ```
 ------------------------------------------------
-Comment out if you wish to save as html for later viewing.
-
-```bash
+### Saving Output
+Uncomment to export as an HTML file:
+```py
 fig.write_html("solar_system.html", include_plotlyjs="cdn")
 ```
 
