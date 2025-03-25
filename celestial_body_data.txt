@@ -12,3 +12,20 @@
 | periapsis       | Closest approach to the Sun             | Million km    |
 | mean_motion     | Average movement per day                | Degrees/day   |
 -----------------------------------------------------------------------------
+
+
+Add new objects to the json in this format.
+e.g.
+
+    {
+        "name": "Halley's Comet",
+        "radius": 2.1,
+        "color": "gray",
+        "semimajor_axis": 2653.417,
+        "eccentricity": 0.96658,
+        "inclination": 161.96,
+        "orbit": 27284.17,
+        "mean_longitude": 174.356,
+        "periapsis": 87.72,
+        "mean_motion": 0.0131
+    }

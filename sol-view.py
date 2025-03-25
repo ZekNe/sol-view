@@ -84,7 +84,6 @@ def get_position(sphere, date):
 
 
 def get_parent_position(name, date):
-
     for sphere in spheres:
         if sphere["name"] == name:
 
@@ -114,7 +113,6 @@ def get_parent_position(name, date):
             z_final = y_rot * np.sin(inclination)
 
             return x_final, y_final, z_final
-
 
 # Create sphere
 def create_sphere(radius=1, color = "white", name = "sphere", resolution=20):
@@ -281,7 +279,7 @@ fig.update_layout(
         "direction": "left",
         "showactive": False,
         "pad": {'r': 0, 't': 0},
-        "font": {"size": 15},
+        "font": {"size": 20},
         "buttons": [
             {
             "label": "−",
@@ -318,5 +316,5 @@ fig.update_layout(
     margin=dict(l=0, r=0, b=0, t=35)
 )
 
-fig.write_html("solar_system.html", include_plotlyjs="cdn") # Export as html file
+# fig.write_html("solar_system.html", include_plotlyjs="cdn") # Export as html file
 fig.show()
