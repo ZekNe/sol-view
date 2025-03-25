@@ -15,7 +15,7 @@ git clone https://github.com/ZekNe/sol-view.git
 python -m venv venv
 ```
 
-Activate it:
+-Activate it:
 ```bash
 venv/scripts/activate
 ```
