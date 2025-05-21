@@ -1,3 +1,7 @@
+
+
+
+
 # Sol-view
 
 Interactive 3D solar system visualization in Python using Plotly. Accurately displays the Sun, planets, some of their largest moons, and supports adding more celestial bodies.
